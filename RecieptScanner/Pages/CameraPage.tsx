@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { Alert, Button, StyleSheet, TouchableOpacity, Text, View, Dimensions } from 'react-native';
 import { CameraView } from 'expo-camera';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { Routes } from './Routes';
+import type { Routes } from '../Routes';
 
 
 const dimensions = Dimensions.get('window');

@@ -1,53 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import { Alert, Button, StyleSheet, TouchableOpacity, Platform, View, Image, Dimensions} from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { Routes } from './Routes';
+import type { Routes } from '../Routes';
 
 const dimensions = Dimensions.get('window');
 const imgWidth = Math.round(dimensions.width * 4 / 5);
 const imgHeight = Math.round(dimensions.width * 4 / 3);
 
 //const url = "http://127.0.0.1:5000/upload";
-const url = "https://a2be-2603-8001-72f0-8260-b4c4-c341-df2e-7611.ngrok-free.app/upload"
+const url = "https://296f-2603-8001-72f0-8260-8569-70aa-1bde-370b.ngrok-free.app/upload"
 
 type Props = NativeStackScreenProps<Routes, 'PreviewPage'>
 function PreviewPage({ route, navigation }: Props) {
   if (!route.params.imgsrc) {
     return;
   }
-  
-  const uploadPicture = async() => {
-    console.log(Platform.OS);
-    const formdata = new FormData();
-
-    
-    const photodata = {
-      uri: Platform.OS === 'ios' ? route.params.imgsrc.replace('file://', '') : route.params.imgsrc,
-      name: 'test.txt',
-      type: 'image/jpeg'
-    };
-    
-    console.log(JSON.stringify(photodata));
-    formdata.append('photo', photodata);
-
-    
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        body: formdata,
-      });
-      const data = await res.json();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      console.log("done");
-    }
-    
-  }
-
 
   return (
     <View style={styles.container}>
@@ -67,7 +34,7 @@ function PreviewPage({ route, navigation }: Props) {
         <Button
           title="Analyze"
           color="white"
-          onPress={uploadPicture}
+          onPress={() => navigation.navigate("AnalysisPage", { imgsrc: route.params.imgsrc })}
         />
       </View>
     </View>
