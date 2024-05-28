@@ -61,12 +61,32 @@ function AnalysisPage({ route, navigation }: Props) {
     
   };
 
+  const filterOCR = () => {
+
+    // reduct ocr list to dict of {person => price}
+    const reducedOCR = ocrList.reduce(
+      (accumulator, entry) => {
+        if (entry.assignedPerson !== -1) {
+          if (accumulator.has(entry.assignedPerson))
+            accumulator.set(entry.assignedPerson, accumulator.get(entry.assignedPerson) + Number(entry.price));
+          else
+            accumulator.set(entry.assignedPerson, Number(entry.price));
+        }
+        return accumulator;
+      },
+      new Map()
+    );
+    console.log(reducedOCR);
+    navigation.navigate("ResultPage", {resultMap: reducedOCR});
+
+  }
+
   useEffect(() => {
     console.log(route.params);
     uploadPicture();
   }, []);
 
-  const onResultPress = (resultIdx) => {
+  const onResultPress = (resultIdx: number) => {
     if (selectedIdx === -1)
       return;
     const updatedOcr = ocrList.map((e, i) => {
@@ -112,7 +132,7 @@ function AnalysisPage({ route, navigation }: Props) {
             extraData={selectedIdx}
             style={styles.priceList}
           />
-          <Button onPress={() => console.log("Pressed!")} text={"view_"} color={"purple"} selectedColor={'#402a5c'}/>
+          <Button onPress={filterOCR} text={"view_"} color={"purple"} selectedColor={'#402a5c'}/>
         </View>
       )}
     </SafeAreaView>

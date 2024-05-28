@@ -7,6 +7,7 @@ import PreviewPage from './Pages/PreviewPage';
 import type { Routes } from './Routes';
 import AnalysisPage from './Pages/AnalysisPage';
 import ConfigurePage from './Pages/ConfigurePage';
+import ResultPage from './Pages/ResultPage';
 
 const Stack = createNativeStackNavigator<Routes>();
 
@@ -41,6 +42,7 @@ function App() {
         <Stack.Screen name="CameraPage" component={CameraPage} />
         <Stack.Screen name="PreviewPage" component={PreviewPage} />
         <Stack.Screen name="AnalysisPage" component={AnalysisPage} />
+        <Stack.Screen name="ResultPage" component={ResultPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

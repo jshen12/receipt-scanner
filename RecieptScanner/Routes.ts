@@ -4,4 +4,5 @@ export type Routes = {
   CameraPage: { numPeople: number };
   PreviewPage: { imgsrc: string, numPeople: number };
   AnalysisPage: { imgsrc: string, numPeople: number };
+  ResultPage: { resultMap: Map<number, number> };
 }

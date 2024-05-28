@@ -28,7 +28,7 @@ function ConfigurePage({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView alwaysBounceVertical={false} style={styles.form} contentContainerStyle={styles.formItems}>
-        <Text>Number of People</Text>
+        <Text style={styles.label}>Number of People</Text>
         <TextInput 
           keyboardType="number-pad"
           style={styles.input}
@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
   },
   formItems: {
     gap: 5
+  },
+  label: {
+    fontSize: 20
   },
   input: {
     height: 40,
