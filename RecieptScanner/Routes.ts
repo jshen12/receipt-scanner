@@ -1,6 +1,7 @@
 export type Routes = {
   HomePage: undefined;
-  CameraPage: undefined;
-  PreviewPage: { imgsrc: string };
-  AnalysisPage: { imgsrc: string };
+  ConfigurePage: undefined;
+  CameraPage: { numPeople: number };
+  PreviewPage: { imgsrc: string, numPeople: number };
+  AnalysisPage: { imgsrc: string, numPeople: number };
 }

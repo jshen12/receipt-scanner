@@ -9,7 +9,7 @@ const dimensions = Dimensions.get('window');
 const verticalPadding = dimensions.height - Math.round(dimensions.width * 4 / 3);
 
 type Props = NativeStackScreenProps<Routes, 'CameraPage'>
-function CameraPage({ navigation }: Props) {
+function CameraPage({ route, navigation }: Props) {
 
   const [cameraReady, setCameraReady] = useState(false);
   const cameraRef = useRef<CameraView | null>();
@@ -20,7 +20,7 @@ function CameraPage({ navigation }: Props) {
       const photo = await cameraRef.current?.takePictureAsync();
       console.log(photo);
       if (photo?.uri) {
-        navigation.navigate("PreviewPage", { imgsrc: photo?.uri });
+        navigation.navigate("PreviewPage", { imgsrc: photo?.uri, numPeople: route.params.numPeople });
       }
     }
     

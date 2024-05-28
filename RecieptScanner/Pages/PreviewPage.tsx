@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-import { Alert, Button, StyleSheet, TouchableOpacity, Platform, View, Image, Dimensions} from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity, Platform, View, Image, Dimensions} from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { Routes } from '../Routes';
+import Button from '../components/Button';
 
 const dimensions = Dimensions.get('window');
 const imgWidth = Math.round(dimensions.width * 4 / 5);
@@ -27,14 +28,16 @@ function PreviewPage({ route, navigation }: Props) {
       ></Image>
       <View style={styles.bottom}>
         <Button
-          title="Retake Photo"
-          color="white"
+          text="Retake Photo"
           onPress={() => navigation.goBack()}
+          color={"purple"}
+          selectedColor={'#402a5c'}
         />
         <Button
-          title="Analyze"
-          color="white"
-          onPress={() => navigation.navigate("AnalysisPage", { imgsrc: route.params.imgsrc })}
+          text="Analyze"
+          onPress={() => navigation.navigate("AnalysisPage", { imgsrc: route.params.imgsrc, numPeople: route.params.numPeople })}
+          color={"purple"}
+          selectedColor={'#402a5c'}
         />
       </View>
     </View>
@@ -61,7 +64,7 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   top: {
-    height: "20%"
+    height: "5%"
   }
 });
 

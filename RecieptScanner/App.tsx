@@ -6,19 +6,20 @@ import CameraPage from './Pages/CameraPage';
 import PreviewPage from './Pages/PreviewPage';
 import type { Routes } from './Routes';
 import AnalysisPage from './Pages/AnalysisPage';
+import ConfigurePage from './Pages/ConfigurePage';
 
 const Stack = createNativeStackNavigator<Routes>();
 
 type Props = NativeStackScreenProps<Routes, 'HomePage'>
 function HomeScreen({ navigation }: Props) {
   const activateCamera = () => {
-    navigation.navigate("CameraPage");
+    navigation.navigate("ConfigurePage");
   }
 
   return (
     <View style={styles.container}>
       <Button 
-        title="Open Camera"
+        title="New Reciept"
         color="#f194ff"
         onPress={activateCamera}
       />
@@ -36,6 +37,7 @@ function App() {
         }}
         initialRouteName="HomePage">
         <Stack.Screen name="HomePage" component={HomeScreen} />
+        <Stack.Screen name="ConfigurePage" component={ConfigurePage} />
         <Stack.Screen name="CameraPage" component={CameraPage} />
         <Stack.Screen name="PreviewPage" component={PreviewPage} />
         <Stack.Screen name="AnalysisPage" component={AnalysisPage} />

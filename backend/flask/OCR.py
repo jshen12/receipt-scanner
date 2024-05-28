@@ -40,6 +40,6 @@ def filter_lines(lines):
     for line in lines:
         matched = re.search(price_regex, line)
         if matched is not None:
-            price_lines.append((line, matched.group()))
+            price_lines.append({'text': line, 'price': matched.group()})
     print(price_lines)
     return price_lines

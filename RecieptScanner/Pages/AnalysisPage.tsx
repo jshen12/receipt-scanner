@@ -1,22 +1,27 @@
 import { useState, useRef, useEffect } from 'react';
-import { Alert, Button, StyleSheet, Text, Platform, View, Image, Dimensions, ActivityIndicator, Pressable} from 'react-native';
+import { Alert, StyleSheet, Text, Platform, View, Image, Dimensions, ActivityIndicator, Pressable, FlatList, SafeAreaView, ScrollView} from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { Routes } from '../Routes';
-import sharedstyles from '../sharedstyles';
+import Button from '../components/Button';
 
 //const url = "http://127.0.0.1:5000/upload";
-const url = "https://296f-2603-8001-72f0-8260-8569-70aa-1bde-370b.ngrok-free.app/upload";
+const url = "https://dab0-2603-8001-72f0-8260-8569-70aa-1bde-370b.ngrok-free.app/upload";
+const colors = ["#3BC481", "#3D3BC4", "#C43B7E", "#C2C43B", "#E7E393"];
+
+type ocrEntry = {
+  text: string,
+  price: string,
+  assignedPerson: number
+}
 
 type Props = NativeStackScreenProps<Routes, 'AnalysisPage'>
 function AnalysisPage({ route, navigation }: Props) {
 
   const [isLoading, setLoading] = useState(true);
-  const [ocrList, setOCRList] = useState([]);
-  const [selectedIdx, setSelectedIdx] = useState(0);
+  const [ocrList, setOCRList] = useState<Array<ocrEntry>>([]);
+  const [selectedIdx, setSelectedIdx] = useState(-1);
 
   const uploadPicture = async() => {
-    navigation.navigate("AnalysisPage", { imgsrc: route.params.imgsrc });
-
     const formdata = new FormData();
     
     const photodata = {
@@ -39,7 +44,14 @@ function AnalysisPage({ route, navigation }: Props) {
       });
       const data = await res.json();
       console.log(data);
-      setOCRList(data['data'])
+      const ocrList = data['data'].map((e: {text: string, price: string}) => (
+        {
+          text: e.text,
+          price: e.price,
+          assignedPerson: -1
+        }
+      ));
+      setOCRList(ocrList);
     } catch (error) {
       console.error(error);
     } finally {
@@ -50,30 +62,60 @@ function AnalysisPage({ route, navigation }: Props) {
   };
 
   useEffect(() => {
+    console.log(route.params);
     uploadPicture();
   }, []);
 
-  const ocrResults = ocrList.map((ocrEntry, idx) => 
-    <Text key={idx}>{ocrEntry[0]}</Text>
+  const onResultPress = (resultIdx) => {
+    if (selectedIdx === -1)
+      return;
+    const updatedOcr = ocrList.map((e, i) => {
+      if (i === resultIdx)
+        return {...e, assignedPerson: selectedIdx};
+      else
+        return e;
+    });
+    setOCRList(updatedOcr);
+  }
+
+
+  const ocrResults = ({item, index}) => (
+    <Pressable style={item.assignedPerson === -1 ? styles.priceItem : [styles.priceItem, {backgroundColor: colors[item.assignedPerson]}]} onPress={() => onResultPress(index)}>
+      <Text style={styles.priceText}>{item.text}</Text>
+    </Pressable>
   );
 
+  const peopleButtons = Array.from(Array(route.params.numPeople), (e, i) => {
+    return (
+      <Button onPress={() => setSelectedIdx(i)} text={"Person " + (i + 1)} color={colors[i]} selectedColor={'#402a5c'} key={i}/>
+    );
+  });
+
+  
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       {isLoading ? (
-        <>
+        <View style={styles.pageView}>
           <Text>Processing Image....</Text>
           <ActivityIndicator />
-        </>
+        </View>
       ) : (
-        <>
-          {ocrResults}
-          <Pressable style={sharedstyles.button} onPress={() => console.log("Pressed!")}>
-            <Text style={sharedstyles.buttonText}>View Results</Text>
-          </Pressable>
-        </>
+        <View style={styles.pageView}>
+          <Text style={styles.titleText}>Assign Prices</Text>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.personSelector}>
+            {peopleButtons}
+          </ScrollView>
+          <FlatList
+            data={ocrList}
+            renderItem={ocrResults}
+            extraData={selectedIdx}
+            style={styles.priceList}
+          />
+          <Button onPress={() => console.log("Pressed!")} text={"view_"} color={"purple"} selectedColor={'#402a5c'}/>
+        </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -81,9 +123,30 @@ function AnalysisPage({ route, navigation }: Props) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
   },
+  pageView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  personSelector: {
+    marginVertical: 15,
+    height: 50
+  },
+  priceList: {
+    marginVertical: 15,
+  },
+  titleText: {
+    fontSize: 24,
+  },
+  priceItem: {
+    padding: 15,
+    marginVertical: 5,
+    backgroundColor: 'gray',
+  },
+  priceText: {
+    fontSize: 16
+  }
 });
 
 export default AnalysisPage;
