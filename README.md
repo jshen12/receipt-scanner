@@ -1,0 +1,5 @@
+# ReceiptSplitter
+
+## Screenshots
+
+## Building Locally

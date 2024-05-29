@@ -30,14 +30,14 @@ function PreviewPage({ route, navigation }: Props) {
         <Button
           text="Retake Photo"
           onPress={() => navigation.goBack()}
-          color={"purple"}
-          selectedColor={'#402a5c'}
+          color={"#18ab3f"}
+          selectedColor={'#12732c'}
         />
         <Button
           text="Analyze"
           onPress={() => navigation.navigate("AnalysisPage", { imgsrc: route.params.imgsrc, numPeople: route.params.numPeople })}
-          color={"purple"}
-          selectedColor={'#402a5c'}
+          color={"#18ab3f"}
+          selectedColor={'#12732c'}
         />
       </View>
     </View>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'grey',
+    backgroundColor: 'lightgray',
   },
   image: {
     width: 300,

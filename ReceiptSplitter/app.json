@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "receipt-scanner",
-    "slug": "receipt-scanner",
+    "name": "receipt-splitter",
+    "slug": "receipt-splitter",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,7 +28,7 @@
       "permissions": [
         "android.permission.CAMERA"
       ],
-      "package": "com.anonymous.receiptscanner"
+      "package": "com.anonymous.receiptsplitter"
     },
     "web": {
       "favicon": "./assets/favicon.png"

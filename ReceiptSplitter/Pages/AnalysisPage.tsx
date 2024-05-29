@@ -5,7 +5,7 @@ import type { Routes } from '../Routes';
 import Button from '../components/Button';
 
 //const url = "http://127.0.0.1:5000/upload";
-const url = "https://dab0-2603-8001-72f0-8260-8569-70aa-1bde-370b.ngrok-free.app/upload";
+const url = "https://0ae5-2603-8001-72f0-8260-281a-6043-3b11-9fd.ngrok-free.app/upload";
 const colors = ["#3BC481", "#3D3BC4", "#C43B7E", "#C2C43B", "#E7E393"];
 
 type ocrEntry = {
@@ -132,7 +132,7 @@ function AnalysisPage({ route, navigation }: Props) {
             extraData={selectedIdx}
             style={styles.priceList}
           />
-          <Button onPress={filterOCR} text={"view_"} color={"purple"} selectedColor={'#402a5c'}/>
+          <Button onPress={filterOCR} text={"Calculate Prices"} color={"#18ab3f"} selectedColor={'#12732c'}/>
         </View>
       )}
     </SafeAreaView>
