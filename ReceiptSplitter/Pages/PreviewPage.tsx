@@ -8,9 +8,6 @@ const dimensions = Dimensions.get('window');
 const imgWidth = Math.round(dimensions.width * 4 / 5);
 const imgHeight = Math.round(dimensions.width * 4 / 3);
 
-//const url = "http://127.0.0.1:5000/upload";
-const url = "https://296f-2603-8001-72f0-8260-8569-70aa-1bde-370b.ngrok-free.app/upload"
-
 type Props = NativeStackScreenProps<Routes, 'PreviewPage'>
 function PreviewPage({ route, navigation }: Props) {
   if (!route.params.imgsrc) {
@@ -35,7 +32,7 @@ function PreviewPage({ route, navigation }: Props) {
         />
         <Button
           text="Analyze"
-          onPress={() => navigation.navigate("AnalysisPage", { imgsrc: route.params.imgsrc, numPeople: route.params.numPeople })}
+          onPress={() => navigation.navigate("AnalysisPage", { imgsrc: route.params.imgsrc, participants: route.params.participants })}
           color={"#18ab3f"}
           selectedColor={'#12732c'}
         />

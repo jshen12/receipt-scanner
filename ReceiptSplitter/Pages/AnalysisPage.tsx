@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
-import { Alert, StyleSheet, Text, Platform, View, Image, Dimensions, ActivityIndicator, Pressable, FlatList, SafeAreaView, ScrollView} from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Text, Platform, View, Image, Dimensions, ActivityIndicator, Pressable, FlatList, SafeAreaView, ScrollView} from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { Routes } from '../Routes';
 import Button from '../components/Button';
 
 //const url = "http://127.0.0.1:5000/upload";
-const url = "https://0ae5-2603-8001-72f0-8260-281a-6043-3b11-9fd.ngrok-free.app/upload";
+const url = "https://7b1e-2603-8001-72f0-8260-f0ef-e1b6-16a9-9fe2.ngrok-free.app/upload";
 const colors = ["#3BC481", "#3D3BC4", "#C43B7E", "#C2C43B", "#E7E393"];
 
 type ocrEntry = {
@@ -77,7 +77,10 @@ function AnalysisPage({ route, navigation }: Props) {
       new Map()
     );
     console.log(reducedOCR);
-    navigation.navigate("ResultPage", {resultMap: reducedOCR});
+    const reducedOCRList = Array.from(reducedOCR.keys(), ((e) => (
+      {name: route.params.participants[e].name, amount: reducedOCR.get(e)}
+    )))
+    navigation.navigate("ResultPage", {resultArray: reducedOCRList});
 
   }
 
@@ -105,9 +108,9 @@ function AnalysisPage({ route, navigation }: Props) {
     </Pressable>
   );
 
-  const peopleButtons = Array.from(Array(route.params.numPeople), (e, i) => {
+  const peopleButtons = Array.from(route.params.participants, (e, i) => {
     return (
-      <Button onPress={() => setSelectedIdx(i)} text={"Person " + (i + 1)} color={colors[i]} selectedColor={'#402a5c'} key={i}/>
+      <Button onPress={() => setSelectedIdx(i)} text={e.name} color={colors[i]} selectedColor={'#402a5c'} key={i}/>
     );
   });
 

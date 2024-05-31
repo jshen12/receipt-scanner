@@ -1,9 +1,8 @@
 import { useState, useRef } from 'react';
-import { Alert, Button, StyleSheet, TouchableOpacity, Text, View, Dimensions } from 'react-native';
-import { CameraView } from 'expo-camera';
+import { Button, StyleSheet, TouchableOpacity, Text, View, Dimensions } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { Routes } from '../Routes';
-
 
 const dimensions = Dimensions.get('window');
 const verticalPadding = dimensions.height - Math.round(dimensions.width * 4 / 3);
@@ -12,18 +11,33 @@ type Props = NativeStackScreenProps<Routes, 'CameraPage'>
 function CameraPage({ route, navigation }: Props) {
 
   const [cameraReady, setCameraReady] = useState(false);
+  const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>();
+
+
   const takePicture = async () => {
-    
     if (cameraRef && cameraReady) {
-      var i = await cameraRef.current?.getAvailablePictureSizesAsync();
       const photo = await cameraRef.current?.takePictureAsync();
       console.log(photo);
       if (photo?.uri) {
-        navigation.navigate("PreviewPage", { imgsrc: photo?.uri, numPeople: route.params.numPeople });
+        navigation.navigate("PreviewPage", { imgsrc: photo?.uri, participants: route.params.participants });
       }
     }
     
+  }
+
+  if (!permission) {
+    return <View />
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
   }
 
   return (
@@ -36,9 +50,9 @@ function CameraPage({ route, navigation }: Props) {
         ref={(camera) => {
           cameraRef.current = camera;
         }}
-        >
+        onMountError={(e) => console.log(e)}
+      />
         
-      </CameraView>
       <View style={styles.buttonRow}>
           <TouchableOpacity style={styles.cameraButton}>
             <TouchableOpacity style={styles.cameraInnerButton} onPress={takePicture}/>

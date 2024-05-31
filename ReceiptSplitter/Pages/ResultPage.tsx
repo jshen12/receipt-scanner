@@ -7,11 +7,11 @@ import Button from '../components/Button';
 type Props = NativeStackScreenProps<Routes, 'ResultPage'>
 function ResultPage({ route, navigation }: Props) {
 
-  const personList = Array.from(route.params.resultMap, ([name, amount]) => {
+  const personList = Array.from(route.params.resultArray, (e, i) => {
     return (
-      <View style={styles.person}>
-        <Text style={styles.nameText}>{name}</Text>
-        <Text style={styles.moneyText}>${amount.toFixed(2)}</Text>
+      <View key={i} style={styles.person}>
+        <Text style={styles.nameText}>{e.name}</Text>
+        <Text style={styles.moneyText}>${e.amount.toFixed(2)}</Text>
       </View>
       
     );

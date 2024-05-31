@@ -1,8 +1,8 @@
 export type Routes = {
   HomePage: undefined;
   ConfigurePage: undefined;
-  CameraPage: { numPeople: number };
-  PreviewPage: { imgsrc: string, numPeople: number };
-  AnalysisPage: { imgsrc: string, numPeople: number };
-  ResultPage: { resultMap: Map<number, number> };
+  CameraPage: { participants: Array<{name: string}> };
+  PreviewPage: { imgsrc: string, participants: Array<{name: string}>  };
+  AnalysisPage: { imgsrc: string, participants: Array<{name: string}>  };
+  ResultPage: { resultArray: Array<{name: string, amount: number}> };
 }
