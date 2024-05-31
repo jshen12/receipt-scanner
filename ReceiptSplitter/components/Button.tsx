@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: 'purple',
     borderRadius: 25,
+    height: 45,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderWidth: 1,

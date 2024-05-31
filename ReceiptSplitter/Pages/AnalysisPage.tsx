@@ -154,13 +154,15 @@ const styles = StyleSheet.create({
   },
   personSelector: {
     marginVertical: 15,
-    height: 50
+    maxHeight: 55
   },
   priceList: {
     marginVertical: 15,
   },
   titleText: {
     fontSize: 24,
+    fontWeight: 'bold',
+    marginVertical: 15
   },
   priceItem: {
     padding: 15,
