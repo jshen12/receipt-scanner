@@ -20,6 +20,7 @@ function AnalysisPage({ route, navigation }: Props) {
   const [isLoading, setLoading] = useState(true);
   const [ocrList, setOCRList] = useState<Array<ocrEntry>>([]);
   const [selectedIdx, setSelectedIdx] = useState(-1);
+  const [error, setError] = useState('');
 
   const uploadPicture = async() => {
     const formdata = new FormData();
@@ -33,31 +34,38 @@ function AnalysisPage({ route, navigation }: Props) {
     console.log(JSON.stringify(photodata));
     formdata.append('photo', photodata);
 
-    
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        body: formdata,
-      });
-      const data = await res.json();
-      console.log(data);
-      const ocrList = data['data'].map((e: {text: string, price: string}) => (
-        {
-          text: e.text,
-          price: e.price,
-          assignedPerson: -1
-        }
-      ));
-      setOCRList(ocrList);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      console.log("done");
-      setLoading(false);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      body: formdata,
+    });
+    if (!res.ok) {
+      console.log(res);
+      if (res.status == 500) {
+        const data = await res.json();
+        setError("Server Error: " + data["error"]);
+      } else {
+        setError("Could not find server");
+      }
+      console.log(error);
+      return;
     }
+    const data = await res.json();
+    
+    console.log(data);
+    const ocrList = data['data'].map((e: {text: string, price: string}) => (
+      {
+        text: e.text,
+        price: e.price,
+        assignedPerson: -1
+      }
+    ));
+    setOCRList(ocrList);
+
+    console.log("done");
+    setLoading(false);
     
   };
 
@@ -115,6 +123,15 @@ function AnalysisPage({ route, navigation }: Props) {
   });
 
   
+  if (error !== '') {
+    return (
+      <SafeAreaView style={styles.errorScreen}>
+        <Text>{error}</Text>
+        <Button onPress={() => navigation.goBack()} text={"Go Back"} color={"#18ab3f"} selectedColor={'#12732c'}/>
+      </SafeAreaView>
+    )
+  }
+
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -171,6 +188,12 @@ const styles = StyleSheet.create({
   },
   priceText: {
     fontSize: 16
+  },
+  errorScreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 15
   }
 });
 
