@@ -35,6 +35,7 @@ function App() {
       <Stack.Navigator 
         screenOptions={{
           headerShown: false,
+          gestureEnabled: false,
         }}
         initialRouteName="HomePage">
         <Stack.Screen name="HomePage" component={HomeScreen} />
