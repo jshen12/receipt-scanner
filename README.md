@@ -39,5 +39,5 @@ npm i
 npm run dev
 ```
 
-This will generate a QR code that you can scan and run the app with [Expo Go](https://expo.dev/go). If you have a local backend running, make sure to also 
+This will generate a QR code that you can scan and run the app with [Expo Go](https://expo.dev/go). If you have a local backend running, make sure to also update the `.env` file with the API endpoint.
 

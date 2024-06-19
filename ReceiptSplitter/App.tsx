@@ -1,50 +1,32 @@
 import { Alert, StyleSheet, Button, TouchableOpacity, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import CameraPage from './Pages/CameraPage';
-import PreviewPage from './Pages/PreviewPage';
-import type { Routes } from './Routes';
-import AnalysisPage from './Pages/AnalysisPage';
-import ConfigurePage from './Pages/ConfigurePage';
-import ResultPage from './Pages/ResultPage';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeStack from './Pages/HomePage';
 
-const Stack = createNativeStackNavigator<Routes>();
 
-type Props = NativeStackScreenProps<Routes, 'HomePage'>
-function HomeScreen({ navigation }: Props) {
-  const activateCamera = () => {
-    navigation.navigate("ConfigurePage");
-  }
-
-  return (
-    <View style={styles.container}>
-      <Button 
-        title="New Reciept"
-        color="#f194ff"
-        onPress={activateCamera}
-      />
-    </View>
-  )
+function HistoryPage() {
+  return <View><Text>History</Text></View>
+}
+function ProfilePage() {
+  return <View><Text>Profile</Text></View>
 }
 
-function App() {
+const Tab = createBottomTabNavigator();
 
+function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator 
-        screenOptions={{
-          headerShown: false,
-          gestureEnabled: false,
-        }}
-        initialRouteName="HomePage">
-        <Stack.Screen name="HomePage" component={HomeScreen} />
-        <Stack.Screen name="ConfigurePage" component={ConfigurePage} />
-        <Stack.Screen name="CameraPage" component={CameraPage} />
-        <Stack.Screen name="PreviewPage" component={PreviewPage} />
-        <Stack.Screen name="AnalysisPage" component={AnalysisPage} />
-        <Stack.Screen name="ResultPage" component={ResultPage} />
-      </Stack.Navigator>
+      <Tab.Navigator>
+        <Tab.Screen name="HistoryPage" component={HistoryPage}/>
+        <Tab.Screen name="NewReceipt" component={HomeStack} options={{
+          tabBarStyle: {
+            display: 'none'
+          },
+          headerShown: false
+        }}/>
+        <Tab.Screen name="ProfilePage" component={ProfilePage} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
