@@ -1,4 +1,5 @@
 export type Routes = {
+  History: undefined;
   HomePage: undefined;
   ConfigurePage: undefined;
   CameraPage: { participants: Array<{name: string}> };

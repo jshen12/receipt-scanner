@@ -71,9 +71,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'black',
   },
-  header: {
-    height: 50,
-  },
   camera: {
     flex: 1,
     marginTop: verticalPadding / 2,

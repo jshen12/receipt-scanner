@@ -7,6 +7,8 @@ import os
 import re
 import config
 
+pytesseract.pytesseract.tesseract_cmd = config.TESSERACT_PATH
+
 
 def process_image(img_file):
     file_path = 'temp/' + str(uuid.uuid4())

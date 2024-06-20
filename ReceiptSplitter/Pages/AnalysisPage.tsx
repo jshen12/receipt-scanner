@@ -3,7 +3,6 @@ import { StyleSheet, Text, Platform, View, Image, Dimensions, ActivityIndicator,
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { Routes } from '../Routes';
 import Button from '../components/Button';
-import Config from "react-native-config";
 
 //const url = "http://127.0.0.1:5000/upload";
 const url = "https://7b1e-2603-8001-72f0-8260-f0ef-e1b6-16a9-9fe2.ngrok-free.app/upload";
@@ -35,7 +34,7 @@ function AnalysisPage({ route, navigation }: Props) {
     console.log(JSON.stringify(photodata));
     formdata.append('photo', photodata);
 
-    const res = await fetch(Config.SERVER_URL + "/upload", {
+    const res = await fetch(process.env.EXPO_PUBLIC_SERVER_URL + "/upload", {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',

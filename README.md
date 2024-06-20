@@ -16,6 +16,8 @@ ReceiptSplitter is a mobile app that helps you split receipt payments among frie
 
 ### Backend
 
+You will need to have [tesseract](https://github.com/tesseract-ocr/tesseract) installed on your machine, then edit `config.py` with the path to the excecutable. Then run:
+
 ```
 cd backend
 python -m venv .venv

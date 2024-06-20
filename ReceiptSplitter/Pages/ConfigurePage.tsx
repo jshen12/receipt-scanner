@@ -52,7 +52,13 @@ function ConfigurePage({ route, navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <Text style={styles.title}>Add Participants</Text>
+      <View style={styles.header}>
+        <Pressable onPress={() => navigation.navigate("History")}>
+          <Ionicons name="arrow-back" size={35} />
+        </Pressable>
+        <Text style={styles.title}>Add Participants</Text>
+        <View></View>
+      </View>
       <View style={styles.formEntry}>
         <Text style={styles.label}>Number of People</Text>
         <View style={styles.counter}>
@@ -71,7 +77,12 @@ function ConfigurePage({ route, navigation }: Props) {
       <ScrollView style={styles.peopleList} contentContainerStyle={styles.formItems}>
         {participantList}
       </ScrollView>
-      <Button onPress={() => navigation.navigate("CameraPage", {participants: participants})} text={"Continue"} color={"#18ab3f"} selectedColor={'#12732c'}/>
+      <Button 
+        onPress={() => navigation.navigate("CameraPage", {participants: participants})} 
+        text={"Continue"} 
+        color={"#18ab3f"} 
+        selectedColor={'#12732c'}
+      />
     </SafeAreaView>
   );
 }
@@ -82,12 +93,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 25,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 25,
+    marginBottom: 10,
+  },
   title: {
     fontSize: 25,
     fontWeight: 'bold',
-    alignSelf: 'center',
-    marginTop: 25,
-    marginBottom: 10,
+    paddingRight: 35,
   },
   formEntry: {
     flexDirection: 'row',
@@ -104,7 +120,7 @@ const styles = StyleSheet.create({
   },
   participant: {
     height: 50,
-    borderWidth: 1,
+    borderWidth: 0,
     borderRadius: 5,
     width: '100%',
     paddingHorizontal: 10,
@@ -114,7 +130,7 @@ const styles = StyleSheet.create({
   editIcon: {
     position: 'relative',
     right: 50,
-    top: 10,
+    top: 12,
   },
   label: {
     fontSize: 20
@@ -122,7 +138,7 @@ const styles = StyleSheet.create({
   counter: {
     flexDirection: 'row',
     position: 'relative',
-    right: 75,
+    right: 85,
     alignItems: 'center',
     maxWidth: 45,
   },
