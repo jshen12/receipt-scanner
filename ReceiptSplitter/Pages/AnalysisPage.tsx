@@ -111,7 +111,7 @@ function AnalysisPage({ route, navigation }: Props) {
   }
 
 
-  const ocrResults = ({item, index}) => (
+  const ocrResults = ({item, index}: {item: ocrEntry, index: number}) => (
     <Pressable style={item.assignedPerson === -1 ? styles.priceItem : [styles.priceItem, {backgroundColor: colors[item.assignedPerson]}]} onPress={() => onResultPress(index)}>
       <Text style={styles.priceText}>{item.text}</Text>
     </Pressable>
@@ -137,7 +137,7 @@ function AnalysisPage({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.screen}>
       {isLoading ? (
-        <View style={styles.pageView}>
+        <View style={styles.loadingView}>
           <Text>Processing Image....</Text>
           <ActivityIndicator />
         </View>
@@ -164,6 +164,12 @@ function AnalysisPage({ route, navigation }: Props) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+  },
+  loadingView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10
   },
   pageView: {
     flex: 1,

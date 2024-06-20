@@ -1,13 +1,12 @@
-import { Alert, StyleSheet, Button, TouchableOpacity, Text, View } from 'react-native';
+import { Alert, StyleSheet, Button, TouchableOpacity, Text, View, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeStack from './Pages/HomePage';
+import HistoryPage from './Pages/HistoryPage';
+import Header from './components/Header';
+import { Ionicons } from '@expo/vector-icons';
 
 
-function HistoryPage() {
-  return <View><Text>History</Text></View>
-}
 function ProfilePage() {
   return <View><Text>Profile</Text></View>
 }
@@ -15,17 +14,31 @@ function ProfilePage() {
 const Tab = createBottomTabNavigator();
 
 function App() {
+  StatusBar.setBarStyle('dark-content');
+  
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="HistoryPage" component={HistoryPage}/>
-        <Tab.Screen name="NewReceipt" component={HomeStack} options={{
+        <Tab.Screen name="History" component={HistoryPage} options={{
+          header: () => <Header />,
+          tabBarIcon: ({focused, color, size}) => <Ionicons name={focused ? "receipt" : "receipt-outline"} size={size} color={color}/>,
+          tabBarActiveTintColor: 'green',
+          tabBarInactiveTintColor: 'gray',
+        }}/>
+        <Tab.Screen name="New Receipt" component={HomeStack} options={{
           tabBarStyle: {
             display: 'none'
           },
-          headerShown: false
+          headerShown: false,
+          tabBarIcon: ({focused, color, size}) => <Ionicons name="camera-outline" size={size} color={color}/>,
+          tabBarActiveTintColor: 'green',
+          tabBarInactiveTintColor: 'gray',
         }}/>
-        <Tab.Screen name="ProfilePage" component={ProfilePage} />
+        <Tab.Screen name="Profile" component={ProfilePage} options={{
+          tabBarIcon: ({focused, color, size}) => <Ionicons name={focused ? "person-circle" : "person-circle-outline"} size={size} color={color}/>,
+          tabBarActiveTintColor: 'green',
+          tabBarInactiveTintColor: 'gray',
+        }}/>
       </Tab.Navigator>
     </NavigationContainer>
   );

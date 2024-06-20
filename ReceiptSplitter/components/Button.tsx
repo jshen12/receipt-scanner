@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
   button: {
     color: 'white',
     backgroundColor: 'purple',
-    borderRadius: 25,
-    height: 45,
+    borderRadius: 15,
+    height: 50,
     paddingHorizontal: 20,
     paddingVertical: 10,
     justifyContent: 'center',
