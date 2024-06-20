@@ -2,6 +2,10 @@
 
 ReceiptSplitter is a mobile app that helps you split receipt payments among friends. 
 
+## Screenshots
+
+<img src="Screenshots/IMG_1173.PNG" width=300>
+
 ## Features
 
 - [x] Automatic price parsing with Tesseract OCR

@@ -41,28 +41,28 @@ const pastReceipts = [
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "A week ago",
     type: "Food",
-    price: "$37.84"
+    price: "$75.55"
   },
   {
     name: "Killer Noodle Tsujita",
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "A week ago",
     type: "Food",
-    price: "$37.84"
+    price: "$48.24"
   },
   {
     name: "Ralphs",
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "June 8, 2024",
     type: "Shopping",
-    price: "$37.84"
+    price: "$43.02"
   },
   {
     name: "99 Ranch",
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "June 6, 2024",
     type: "Shopping",
-    price: "$37.84"
+    price: "$25.33"
   },
 ];
 

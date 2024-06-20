@@ -3,6 +3,7 @@ import { Button, StyleSheet, TouchableOpacity, Text, View, Dimensions } from 're
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { Routes } from '../Routes';
+import { Ionicons } from '@expo/vector-icons';
 
 const dimensions = Dimensions.get('window');
 const verticalPadding = dimensions.height - Math.round(dimensions.width * 4 / 3);
@@ -54,10 +55,10 @@ function CameraPage({ route, navigation }: Props) {
       />
         
       <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.cameraButton}>
-            <TouchableOpacity style={styles.cameraInnerButton} onPress={takePicture}/>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.cameraButton}>
+          <TouchableOpacity style={styles.cameraInnerButton} onPress={takePicture}/>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -70,9 +71,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'black',
   },
+  header: {
+    height: 50,
+  },
   camera: {
     flex: 1,
-    marginTop: verticalPadding / 2 ,
+    marginTop: verticalPadding / 2,
     marginBottom: verticalPadding / 2 - 125
   },
   buttonRow: {
