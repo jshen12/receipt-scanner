@@ -48,6 +48,7 @@ function CameraPage({ route, navigation }: Props) {
         facing="back"
         onCameraReady={() => setCameraReady(true)}
         pictureSize='Photo'  // ["3840x2160", "1920x1080", "1280x720", "640x480", "352x288", "Photo", "High", "Medium", "Low"]
+        flash='on'
         ref={(camera) => {
           cameraRef.current = camera;
         }}

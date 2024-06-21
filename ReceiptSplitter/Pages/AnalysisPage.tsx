@@ -3,15 +3,14 @@ import { StyleSheet, Text, Platform, View, Image, Dimensions, ActivityIndicator,
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { Routes } from '../Routes';
 import Button from '../components/Button';
+import { Ionicons } from '@expo/vector-icons';
 
-//const url = "http://127.0.0.1:5000/upload";
-const url = "https://7b1e-2603-8001-72f0-8260-f0ef-e1b6-16a9-9fe2.ngrok-free.app/upload";
 const colors = ["#3BC481", "#3D3BC4", "#C43B7E", "#C2C43B", "#E7E393"];
 
 type ocrEntry = {
   text: string,
   price: string,
-  assignedPerson: number
+  assignedPeople: Array<number>,
 }
 
 type Props = NativeStackScreenProps<Routes, 'AnalysisPage'>
@@ -21,6 +20,8 @@ function AnalysisPage({ route, navigation }: Props) {
   const [ocrList, setOCRList] = useState<Array<ocrEntry>>([]);
   const [selectedIdx, setSelectedIdx] = useState(-1);
   const [error, setError] = useState('');
+
+  const participants = route.params.participants;
 
   const uploadPicture = async() => {
     const formdata = new FormData();
@@ -59,7 +60,7 @@ function AnalysisPage({ route, navigation }: Props) {
       {
         text: e.text,
         price: e.price,
-        assignedPerson: -1
+        assignedPeople: [],
       }
     ));
     setOCRList(ocrList);
@@ -69,16 +70,23 @@ function AnalysisPage({ route, navigation }: Props) {
     
   };
 
+  const getInitials = (name: string) => {
+    return name.match(/\b(\w)/g)?.join('');
+  }
+
   const filterOCR = () => {
 
     // reduct ocr list to dict of {person => price}
     const reducedOCR = ocrList.reduce(
       (accumulator, entry) => {
-        if (entry.assignedPerson !== -1) {
-          if (accumulator.has(entry.assignedPerson))
-            accumulator.set(entry.assignedPerson, accumulator.get(entry.assignedPerson) + Number(entry.price));
-          else
-            accumulator.set(entry.assignedPerson, Number(entry.price));
+        if (entry.assignedPeople.length > 0) {
+          const assignedPrice = Number(entry.price) / entry.assignedPeople.length;
+          for (const person in entry.assignedPeople) {
+            if (accumulator.has(participants[person]))
+              accumulator.set(participants[person], accumulator.get(participants[person]) + assignedPrice);
+            else
+              accumulator.set(participants[person], assignedPrice);
+          }
         }
         return accumulator;
       },
@@ -86,7 +94,7 @@ function AnalysisPage({ route, navigation }: Props) {
     );
     console.log(reducedOCR);
     const reducedOCRList = Array.from(reducedOCR.keys(), ((e) => (
-      {name: route.params.participants[e].name, amount: reducedOCR.get(e)}
+      {name: e.name, amount: reducedOCR.get(e)}
     )))
     navigation.navigate("ResultPage", {resultArray: reducedOCRList});
 
@@ -101,8 +109,15 @@ function AnalysisPage({ route, navigation }: Props) {
     if (selectedIdx === -1)
       return;
     const updatedOcr = ocrList.map((e, i) => {
-      if (i === resultIdx)
-        return {...e, assignedPerson: selectedIdx};
+      if (i === resultIdx) {
+        const newAssignedPeople = e.assignedPeople;
+        if (!newAssignedPeople.includes(selectedIdx)) {
+          newAssignedPeople.push(selectedIdx);
+        } else {
+          newAssignedPeople.splice(newAssignedPeople.indexOf(selectedIdx), 1);
+        }
+        return {...e, assignedPeople: newAssignedPeople};
+      }
       else
         return e;
     });
@@ -111,14 +126,32 @@ function AnalysisPage({ route, navigation }: Props) {
 
 
   const ocrResults = ({item, index}: {item: ocrEntry, index: number}) => (
-    <Pressable style={item.assignedPerson === -1 ? styles.priceItem : [styles.priceItem, {backgroundColor: colors[item.assignedPerson]}]} onPress={() => onResultPress(index)}>
+    <Pressable style={styles.priceItem} onPress={() => onResultPress(index)} key={index}>
       <Text style={styles.priceText}>{item.text}</Text>
+      <View style={styles.personContainer}>
+        {item.assignedPeople.map((e, i) => (
+          <View style={styles.personIcon} key={i}>
+            <Text>{getInitials(participants[e].name)}</Text>
+          </View>
+        ))}
+      </View>
     </Pressable>
   );
 
-  const peopleButtons = Array.from(route.params.participants, (e, i) => {
+  const peopleButtons = Array.from(participants, (e, i) => {
+    if (i == selectedIdx) {
+      return (
+        <Pressable style={styles.personOutline}>
+          <Pressable style={styles.personBackground} onPress={() => setSelectedIdx(i)} key={i}>
+            <Text>{getInitials(e.name)}</Text>
+          </Pressable>
+        </Pressable>
+      );
+    }
     return (
-      <Button onPress={() => setSelectedIdx(i)} text={e.name} color={colors[i]} selectedColor={'#402a5c'} key={i}/>
+      <Pressable style={styles.personBackground} onPress={() => setSelectedIdx(i)} key={i}>
+        <Text>{getInitials(e.name)}</Text>
+      </Pressable>
     );
   });
 
@@ -143,7 +176,7 @@ function AnalysisPage({ route, navigation }: Props) {
       ) : (
         <View style={styles.pageView}>
           <Text style={styles.titleText}>Assign Prices</Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.personSelector}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.personSelector}>
             {peopleButtons}
           </ScrollView>
           <FlatList
@@ -173,14 +206,43 @@ const styles = StyleSheet.create({
   pageView: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   personSelector: {
-    marginVertical: 15,
-    maxHeight: 55
+    height: 75,
+    alignItems: 'center',
+    gap: 5,
+  },
+  personBackground: {
+    width: 60,
+    height: 60,
+    borderRadius: 60/2,
+    backgroundColor: 'lightgray',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  personOutline: {
+    width: 65,
+    height: 65,
+    borderRadius: 65/2,
+    borderWidth: 5,
+    borderColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  personIcon: {
+    width: 35,
+    height: 35,
+    borderRadius: 35/2,
+    backgroundColor: 'lightgray',
+    marginHorizontal: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   priceList: {
-    marginVertical: 15,
+    marginBottom: 10,
+    width: "100%",
+    maxHeight: 550,
   },
   titleText: {
     fontSize: 24,
@@ -188,12 +250,19 @@ const styles = StyleSheet.create({
     marginVertical: 15
   },
   priceItem: {
-    padding: 15,
-    marginVertical: 5,
-    backgroundColor: 'gray',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    minHeight: 60,
+    paddingHorizontal: 15,
+    borderTopWidth: 1,
+    borderColor: 'black'
   },
   priceText: {
     fontSize: 16
+  },
+  personContainer: {
+    flexDirection: 'row'
   },
   errorScreen: {
     flex: 1,
