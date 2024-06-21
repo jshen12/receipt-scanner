@@ -4,9 +4,11 @@ ReceiptSplitter is a mobile app that helps you split receipt payments among frie
 
 ## Screenshots
 
-<img alt="ReceiptSplitter Home Page" src="Screenshots/HistoryPage.PNG" width=200>
-<img alt="ReceiptSplitter Preview Page" src="Screenshots/PreviewPage.PNG" width=200>
-<img alt="ReceiptSplitter Analysis Page" src="Screenshots/AnalysisPage.PNG" width=200>
+<p align="center">
+  <img alt="ReceiptSplitter Home Page" src="Screenshots/HistoryPage.PNG" width=250>
+  <img alt="ReceiptSplitter Preview Page" src="Screenshots/PreviewPage.PNG" width=250>
+  <img alt="ReceiptSplitter Analysis Page" src="Screenshots/AnalysisPage.PNG" width=250>
+</p>
 
 ## Features
 
