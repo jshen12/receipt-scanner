@@ -16,7 +16,6 @@ function HomeStack() {
     <Stack.Navigator 
       screenOptions={{
         headerShown: false,
-        gestureEnabled: false,
       }}
       initialRouteName="ConfigurePage">
       <Stack.Screen name="ConfigurePage" component={ConfigurePage} />

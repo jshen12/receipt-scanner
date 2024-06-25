@@ -24,7 +24,7 @@ function ResultPage({ route, navigation }: Props) {
       <View>
         {personList}
       </View>
-      <Button onPress={() => navigation.popToTop()} text={"Go to Home"} color={"#18ab3f"} selectedColor={'#12732c'}/>
+      <Button onPress={() => navigation.navigate("History")} text={"Go to Home"} color={"#18ab3f"} selectedColor={'#12732c'}/>
     </SafeAreaView>
   );
 }

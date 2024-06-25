@@ -81,11 +81,11 @@ function AnalysisPage({ route, navigation }: Props) {
       (accumulator, entry) => {
         if (entry.assignedPeople.length > 0) {
           const assignedPrice = Number(entry.price) / entry.assignedPeople.length;
-          for (const person in entry.assignedPeople) {
-            if (accumulator.has(participants[person]))
-              accumulator.set(participants[person], accumulator.get(participants[person]) + assignedPrice);
+          for (const person of entry.assignedPeople) {
+            if (accumulator.has(person))
+              accumulator.set(person, accumulator.get(person) + assignedPrice);
             else
-              accumulator.set(participants[person], assignedPrice);
+              accumulator.set(person, assignedPrice);
           }
         }
         return accumulator;
@@ -94,7 +94,7 @@ function AnalysisPage({ route, navigation }: Props) {
     );
     console.log(reducedOCR);
     const reducedOCRList = Array.from(reducedOCR.keys(), ((e) => (
-      {name: e.name, amount: reducedOCR.get(e)}
+      {name: participants[e].name, amount: reducedOCR.get(e)}
     )))
     navigation.navigate("ResultPage", {resultArray: reducedOCRList});
 
@@ -184,6 +184,7 @@ function AnalysisPage({ route, navigation }: Props) {
             renderItem={ocrResults}
             extraData={selectedIdx}
             style={styles.priceList}
+            ItemSeparatorComponent={() => <View style={{borderBottomColor: "black", borderBottomWidth: StyleSheet.hairlineWidth}} />}
           />
           <Button onPress={filterOCR} text={"Calculate Prices"} color={"#18ab3f"} selectedColor={'#12732c'}/>
         </View>
@@ -255,8 +256,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minHeight: 60,
     paddingHorizontal: 15,
-    borderTopWidth: 1,
-    borderColor: 'black'
   },
   priceText: {
     fontSize: 16
