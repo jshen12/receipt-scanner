@@ -1,7 +1,5 @@
-import { StyleSheet, Text, Pressable, View, SafeAreaView} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-
-
+import { StyleSheet, Text, Pressable, View, SafeAreaView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 function Header() {
   return (
@@ -14,19 +12,19 @@ function Header() {
 
 const styles = StyleSheet.create({
   header: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 100,
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    backgroundColor: "white",
     paddingHorizontal: 25,
     paddingBottom: 10,
     shadowOpacity: 0.85,
   },
   title: {
-    fontWeight: 'bold',
-    fontSize: 30
-  }
+    fontWeight: "bold",
+    fontSize: 30,
+  },
 });
 
 export default Header;

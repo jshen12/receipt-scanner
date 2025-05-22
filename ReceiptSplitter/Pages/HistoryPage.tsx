@@ -1,17 +1,12 @@
-import { useState, useRef } from 'react';
-import { Pressable, StyleSheet, TouchableOpacity, Text, View, Dimensions, FlatList } from 'react-native';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { Routes } from '../Routes';
-import { Ionicons } from '@expo/vector-icons';
-
+import { Pressable, StyleSheet, Text, View, FlatList } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 type receiptData = {
-  name: string,
-  address: string,
-  date: string,
-  type: string,
-  price: string,
+  name: string;
+  address: string;
+  date: string;
+  type: string;
+  price: string;
 };
 
 const pastReceipts = [
@@ -27,56 +22,55 @@ const pastReceipts = [
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "3 days ago",
     type: "Food",
-    price: "$37.97"
+    price: "$37.97",
   },
   {
     name: "Din Tai Fung",
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "4 days ago",
     type: "Food",
-    price: "$104.25"
+    price: "$104.25",
   },
   {
     name: "SUGARFISH",
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "A week ago",
     type: "Food",
-    price: "$75.55"
+    price: "$75.55",
   },
   {
     name: "Killer Noodle Tsujita",
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "A week ago",
     type: "Food",
-    price: "$48.24"
+    price: "$48.24",
   },
   {
     name: "Ralphs",
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "June 8, 2024",
     type: "Shopping",
-    price: "$43.02"
+    price: "$43.02",
   },
   {
     name: "99 Ranch",
     address: "1234 Park St, Los Angeles, CA 90024",
     date: "June 6, 2024",
     type: "Shopping",
-    price: "$25.33"
+    price: "$25.33",
   },
 ];
 
 const typeToIcon = {
-  "Shopping": "cart",
-  "Food": "restaurant"
-}
+  Shopping: "cart",
+  Food: "restaurant",
+};
 
 function HistoryPage() {
-
-  const mapReceipts = ({item}: {item: receiptData}) => (
+  const mapReceipts = ({ item }: { item: receiptData }) => (
     <Pressable onPress={() => null} style={styles.receiptEntry}>
       <View style={styles.receiptLeft}>
-        <Ionicons name={typeToIcon[item.type]} size={35} color={"green"}/>
+        <Ionicons name={typeToIcon[item.type]} size={35} color={"green"} />
         <View>
           <Text style={styles.receiptName}>{item.name}</Text>
           <Text>{item.date}</Text>
@@ -85,54 +79,51 @@ function HistoryPage() {
       <View>
         <Text style={styles.receiptName}>{item.price}</Text>
       </View>
-      
     </Pressable>
   );
-
 
   return (
     <View style={styles.container}>
       <FlatList
         data={pastReceipts}
         renderItem={mapReceipts}
-        ItemSeparatorComponent={() => <View style={styles.receiptDelimiter}/>}
+        ItemSeparatorComponent={() => <View style={styles.receiptDelimiter} />}
         style={styles.receiptList}
       />
     </View>
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   receiptList: {
-    width: '100%',
+    width: "100%",
   },
   receiptEntry: {
-    width: '100%',
+    width: "100%",
     height: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   receiptLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
   receiptName: {
-    fontWeight: 'bold',
-    fontSize: 15
+    fontWeight: "bold",
+    fontSize: 15,
   },
   receiptDelimiter: {
-    borderBottomColor: 'black',
+    borderBottomColor: "black",
     borderBottomWidth: StyleSheet.hairlineWidth,
-  }
+  },
 });
 
 export default HistoryPage;

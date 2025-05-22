@@ -1,44 +1,58 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, Text, Platform, View, Image, Dimensions, ActivityIndicator, Pressable, FlatList, SafeAreaView, ScrollView} from 'react-native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { Routes } from '../Routes';
-import Button from '../components/Button';
-import { Ionicons } from '@expo/vector-icons';
+import { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  Platform,
+  View,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+  Pressable,
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import type { Routes } from "../Routes";
+import Button from "../components/Button";
+import { Ionicons } from "@expo/vector-icons";
 
 const colors = ["#3BC481", "#3D3BC4", "#C43B7E", "#C2C43B", "#E7E393"];
 
 type ocrEntry = {
-  text: string,
-  price: string,
-  assignedPeople: Array<number>,
-}
+  text: string;
+  price: string;
+  assignedPeople: Array<number>;
+};
 
-type Props = NativeStackScreenProps<Routes, 'AnalysisPage'>
+type Props = NativeStackScreenProps<Routes, "AnalysisPage">;
 function AnalysisPage({ route, navigation }: Props) {
-
   const [isLoading, setLoading] = useState(true);
   const [ocrList, setOCRList] = useState<Array<ocrEntry>>([]);
   const [selectedIdx, setSelectedIdx] = useState(-1);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const participants = route.params.participants;
 
-  const uploadPicture = async() => {
+  const uploadPicture = async () => {
     const formdata = new FormData();
-    
+
     const photodata = {
-      uri: Platform.OS === 'ios' ? route.params.imgsrc.replace('file://', '') : route.params.imgsrc,
-      name: 'test.txt',
-      type: 'image/jpeg'
+      uri:
+        Platform.OS === "ios"
+          ? route.params.imgsrc.replace("file://", "")
+          : route.params.imgsrc,
+      name: "test.txt",
+      type: "image/jpeg",
     };
-    
+
     console.log(JSON.stringify(photodata));
-    formdata.append('photo', photodata);
+    formdata.append("photo", photodata);
 
     const res = await fetch(process.env.EXPO_PUBLIC_SERVER_URL + "/upload", {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
       body: formdata,
     });
@@ -54,51 +68,43 @@ function AnalysisPage({ route, navigation }: Props) {
       return;
     }
     const data = await res.json();
-    
+
     console.log(data);
-    const ocrList = data['data'].map((e: {text: string, price: string}) => (
-      {
-        text: e.text,
-        price: e.price,
-        assignedPeople: [],
-      }
-    ));
+    const ocrList = data["data"].map((e: { text: string; price: string }) => ({
+      text: e.text,
+      price: e.price,
+      assignedPeople: [],
+    }));
     setOCRList(ocrList);
 
     console.log("done");
     setLoading(false);
-    
   };
 
   const getInitials = (name: string) => {
-    return name.match(/\b(\w)/g)?.join('');
-  }
+    return name.match(/\b(\w)/g)?.join("");
+  };
 
   const filterOCR = () => {
-
     // reduct ocr list to dict of {person => price}
-    const reducedOCR = ocrList.reduce(
-      (accumulator, entry) => {
-        if (entry.assignedPeople.length > 0) {
-          const assignedPrice = Number(entry.price) / entry.assignedPeople.length;
-          for (const person of entry.assignedPeople) {
-            if (accumulator.has(person))
-              accumulator.set(person, accumulator.get(person) + assignedPrice);
-            else
-              accumulator.set(person, assignedPrice);
-          }
+    const reducedOCR = ocrList.reduce((accumulator, entry) => {
+      if (entry.assignedPeople.length > 0) {
+        const assignedPrice = Number(entry.price) / entry.assignedPeople.length;
+        for (const person of entry.assignedPeople) {
+          if (accumulator.has(person))
+            accumulator.set(person, accumulator.get(person) + assignedPrice);
+          else accumulator.set(person, assignedPrice);
         }
-        return accumulator;
-      },
-      new Map()
-    );
+      }
+      return accumulator;
+    }, new Map());
     console.log(reducedOCR);
-    const reducedOCRList = Array.from(reducedOCR.keys(), ((e) => (
-      {name: participants[e].name, amount: reducedOCR.get(e)}
-    )))
-    navigation.navigate("ResultPage", {resultArray: reducedOCRList});
-
-  }
+    const reducedOCRList = Array.from(reducedOCR.keys(), (e) => ({
+      name: participants[e].name,
+      amount: reducedOCR.get(e),
+    }));
+    navigation.navigate("ResultPage", { resultArray: reducedOCRList });
+  };
 
   useEffect(() => {
     console.log(route.params);
@@ -106,8 +112,7 @@ function AnalysisPage({ route, navigation }: Props) {
   }, []);
 
   const onResultPress = (resultIdx: number) => {
-    if (selectedIdx === -1)
-      return;
+    if (selectedIdx === -1) return;
     const updatedOcr = ocrList.map((e, i) => {
       if (i === resultIdx) {
         const newAssignedPeople = e.assignedPeople;
@@ -116,17 +121,18 @@ function AnalysisPage({ route, navigation }: Props) {
         } else {
           newAssignedPeople.splice(newAssignedPeople.indexOf(selectedIdx), 1);
         }
-        return {...e, assignedPeople: newAssignedPeople};
-      }
-      else
-        return e;
+        return { ...e, assignedPeople: newAssignedPeople };
+      } else return e;
     });
     setOCRList(updatedOcr);
-  }
+  };
 
-
-  const ocrResults = ({item, index}: {item: ocrEntry, index: number}) => (
-    <Pressable style={styles.priceItem} onPress={() => onResultPress(index)} key={index}>
+  const ocrResults = ({ item, index }: { item: ocrEntry; index: number }) => (
+    <Pressable
+      style={styles.priceItem}
+      onPress={() => onResultPress(index)}
+      key={index}
+    >
       <Text style={styles.priceText}>{item.text}</Text>
       <View style={styles.personContainer}>
         {item.assignedPeople.map((e, i) => (
@@ -142,29 +148,40 @@ function AnalysisPage({ route, navigation }: Props) {
     if (i == selectedIdx) {
       return (
         <Pressable style={styles.personOutline}>
-          <Pressable style={styles.personBackground} onPress={() => setSelectedIdx(i)} key={i}>
+          <Pressable
+            style={styles.personBackground}
+            onPress={() => setSelectedIdx(i)}
+            key={i}
+          >
             <Text>{getInitials(e.name)}</Text>
           </Pressable>
         </Pressable>
       );
     }
     return (
-      <Pressable style={styles.personBackground} onPress={() => setSelectedIdx(i)} key={i}>
+      <Pressable
+        style={styles.personBackground}
+        onPress={() => setSelectedIdx(i)}
+        key={i}
+      >
         <Text>{getInitials(e.name)}</Text>
       </Pressable>
     );
   });
 
-  
-  if (error !== '') {
+  if (error !== "") {
     return (
       <SafeAreaView style={styles.errorScreen}>
         <Text>{error}</Text>
-        <Button onPress={() => navigation.goBack()} text={"Go Back"} color={"#18ab3f"} selectedColor={'#12732c'}/>
+        <Button
+          onPress={() => navigation.goBack()}
+          text={"Go Back"}
+          color={"#18ab3f"}
+          selectedColor={"#12732c"}
+        />
       </SafeAreaView>
-    )
+    );
   }
-
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -176,7 +193,11 @@ function AnalysisPage({ route, navigation }: Props) {
       ) : (
         <View style={styles.pageView}>
           <Text style={styles.titleText}>Assign Prices</Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.personSelector}>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.personSelector}
+          >
             {peopleButtons}
           </ScrollView>
           <FlatList
@@ -184,15 +205,26 @@ function AnalysisPage({ route, navigation }: Props) {
             renderItem={ocrResults}
             extraData={selectedIdx}
             style={styles.priceList}
-            ItemSeparatorComponent={() => <View style={{borderBottomColor: "black", borderBottomWidth: StyleSheet.hairlineWidth}} />}
+            ItemSeparatorComponent={() => (
+              <View
+                style={{
+                  borderBottomColor: "black",
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                }}
+              />
+            )}
           />
-          <Button onPress={filterOCR} text={"Calculate Prices"} color={"#18ab3f"} selectedColor={'#12732c'}/>
+          <Button
+            onPress={filterOCR}
+            text={"Calculate Prices"}
+            color={"#18ab3f"}
+            selectedColor={"#12732c"}
+          />
         </View>
       )}
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   screen: {
@@ -200,45 +232,45 @@ const styles = StyleSheet.create({
   },
   loadingView: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
   },
   pageView: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   personSelector: {
     height: 75,
-    alignItems: 'center',
+    alignItems: "center",
     gap: 5,
   },
   personBackground: {
     width: 60,
     height: 60,
-    borderRadius: 60/2,
-    backgroundColor: 'lightgray',
-    alignItems: 'center',
-    justifyContent: 'center'
+    borderRadius: 60 / 2,
+    backgroundColor: "lightgray",
+    alignItems: "center",
+    justifyContent: "center",
   },
   personOutline: {
     width: 65,
     height: 65,
-    borderRadius: 65/2,
+    borderRadius: 65 / 2,
     borderWidth: 5,
-    borderColor: 'green',
-    alignItems: 'center',
-    justifyContent: 'center'
+    borderColor: "green",
+    alignItems: "center",
+    justifyContent: "center",
   },
   personIcon: {
     width: 35,
     height: 35,
-    borderRadius: 35/2,
-    backgroundColor: 'lightgray',
+    borderRadius: 35 / 2,
+    backgroundColor: "lightgray",
     marginHorizontal: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   priceList: {
     marginBottom: 10,
@@ -247,28 +279,28 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 15
+    fontWeight: "bold",
+    marginVertical: 15,
   },
   priceItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     minHeight: 60,
     paddingHorizontal: 15,
   },
   priceText: {
-    fontSize: 16
+    fontSize: 16,
   },
   personContainer: {
-    flexDirection: 'row'
+    flexDirection: "row",
   },
   errorScreen: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 15
-  }
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 15,
+  },
 });
 
 export default AnalysisPage;
